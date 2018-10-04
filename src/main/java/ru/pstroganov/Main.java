@@ -2,9 +2,6 @@ package ru.pstroganov;
 
 import ru.pstroganov.cache.CacheHolder;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 public class Main {

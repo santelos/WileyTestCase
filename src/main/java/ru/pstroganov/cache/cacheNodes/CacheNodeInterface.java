@@ -12,8 +12,6 @@
 
 package ru.pstroganov.cache.cacheNodes;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.io.IOException;
 import java.io.Serializable;
 

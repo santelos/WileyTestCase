@@ -5,8 +5,8 @@
 package ru.pstroganov.cache;
 
 import ru.pstroganov.cache.cacheNodes.CacheNodeInterface;
-import ru.pstroganov.cache.cacheNodes.MemoryCacheNodeNew;
-import ru.pstroganov.cache.cacheStrategy.CacheStrategy;
+import ru.pstroganov.cache.cacheNodes.MemoryCacheNode;
+import ru.pstroganov.cache.cacheStrategy.CacheStrategyInterface;
 import ru.pstroganov.cache.cacheStrategy.LRUCacheStrategy;
 
 import java.io.IOException;
@@ -23,7 +23,7 @@ public class CacheHolder<K, V extends Serializable> {
     Map<K, CacheNodeInterface> cache = new HashMap<>();
 
     // По идее, можно реализовать любую стратегию кэширования
-    CacheStrategy cacheStrategy = new LRUCacheStrategy();
+    CacheStrategyInterface cacheStrategy = new LRUCacheStrategy();
 
     public CacheHolder(Integer maxMemorySize, Integer maxFileSize) {
         if (maxMemorySize < 0) this.maxMemorySize = 0;
@@ -34,7 +34,7 @@ public class CacheHolder<K, V extends Serializable> {
 
     public void save(K key, V value) {
         tryToRechache();
-        if (cache.size() + 1 <maxMemorySize+maxFileSize) cache.put(key, new MemoryCacheNodeNew<>(value));
+        if (cache.size() + 1 <maxMemorySize+maxFileSize) cache.put(key, new MemoryCacheNode<>(value));
     }
 
     public V get(K key) {

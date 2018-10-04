@@ -5,15 +5,16 @@
 package ru.pstroganov.cache.cacheStrategy;
 
 import ru.pstroganov.cache.cacheNodes.CacheNodeInterface;
-import ru.pstroganov.cache.cacheNodes.FileCacheNodeNew;
-import ru.pstroganov.cache.cacheNodes.MemoryCacheNodeNew;
-import ru.pstroganov.cache.cacheNodes.*;
+import ru.pstroganov.cache.cacheNodes.FileCacheNode;
+import ru.pstroganov.cache.cacheNodes.MemoryCacheNode;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class LRUCacheStrategy implements CacheStrategy {
+public class LRUCacheStrategy implements CacheStrategyInterface {
 
     @Override
     public <K> void sortAndDivide(Map<K, CacheNodeInterface> cacheTable, Integer maxMem, Integer maxFile) {
@@ -30,10 +31,10 @@ public class LRUCacheStrategy implements CacheStrategy {
         resList.removeIf(e -> {
             try {
                 if (!e.getValue().inMemory() && resList.indexOf(e) < maxMem) {
-                    cacheTable.replace(e.getKey(), new MemoryCacheNodeNew<>(e.getValue().get(true),e.getValue().count()));
+                    cacheTable.replace(e.getKey(), new MemoryCacheNode<>(e.getValue().get(true),e.getValue().count()));
                 }
                 if(e.getValue().inMemory() && resList.indexOf(e)>=maxMem && resList.indexOf(e)<maxMem+maxFile){
-                    cacheTable.replace(e.getKey(), new FileCacheNodeNew<>(e.getValue().get(true),e.getValue().count()));
+                    cacheTable.replace(e.getKey(), new FileCacheNode<>(e.getValue().get(true),e.getValue().count()));
                 }
                 if (resList.indexOf(e)>=maxMem+maxFile) {
                     cacheTable.get(e.getKey()).removeValue();

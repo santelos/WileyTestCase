@@ -11,16 +11,16 @@ package ru.pstroganov.cache.cacheNodes;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class MemoryCacheNodeNew<V extends Serializable> implements CacheNodeInterface<V> {
+public class MemoryCacheNode<V extends Serializable> implements CacheNodeInterface<V> {
 
     V value;
     Integer count=1;
 
-    public MemoryCacheNodeNew(V _value){
+    public MemoryCacheNode(V _value){
         set(_value);
     }
 
-    public MemoryCacheNodeNew(V _value, Integer usage){
+    public MemoryCacheNode(V _value, Integer usage){
         set(_value);
         count=usage;
     }

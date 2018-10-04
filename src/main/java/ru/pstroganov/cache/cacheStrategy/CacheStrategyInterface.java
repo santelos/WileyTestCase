@@ -10,7 +10,7 @@ import ru.pstroganov.cache.cacheNodes.CacheNodeInterface;
 import java.util.Map;
 
 @FunctionalInterface
-public interface CacheStrategy {
+public interface CacheStrategyInterface {
 
     <K> void sortAndDivide(Map<K, CacheNodeInterface> cacheTable, Integer xamMem, Integer maxFile);
 

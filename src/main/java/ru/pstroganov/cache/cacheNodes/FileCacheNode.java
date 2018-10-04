@@ -11,16 +11,16 @@ package ru.pstroganov.cache.cacheNodes;
 import java.io.*;
 import java.util.UUID;
 
-public class FileCacheNodeNew<V extends Serializable> implements CacheNodeInterface<V> {
+public class FileCacheNode<V extends Serializable> implements CacheNodeInterface<V> {
 
     File value;
     Integer count = 1;
 
-    public FileCacheNodeNew(V _value) throws IOException {
+    public FileCacheNode(V _value) throws IOException {
         set(_value);
     }
 
-    public FileCacheNodeNew(V _value, Integer usage) throws IOException {
+    public FileCacheNode(V _value, Integer usage) throws IOException {
         set(_value);
         count=usage;
     }
