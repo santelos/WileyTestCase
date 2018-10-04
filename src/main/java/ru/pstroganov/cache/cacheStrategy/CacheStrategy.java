@@ -5,13 +5,13 @@
 package ru.pstroganov.cache.cacheStrategy;
 
 
-import ru.pstroganov.cache.cacheNodes.CacheNode;
+import ru.pstroganov.cache.cacheNodes.CacheNodeInterface;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 @FunctionalInterface
 public interface CacheStrategy {
 
-    <K,E extends CacheNode> void sortAndDivide(LinkedHashMap<K, E> cacheTable);
+    <K> void sortAndDivide(Map<K, CacheNodeInterface> cacheTable, Integer xamMem, Integer maxFile);
 
 }
