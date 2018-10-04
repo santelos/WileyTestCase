@@ -8,31 +8,30 @@
 
 package ru.pstroganov.cache.cacheNodes;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 public class MemoryCacheNode<V extends Serializable> implements CacheNodeInterface<V> {
 
-    V value;
-    Integer count=1;
+    private V value;
+    private Integer count = 1;
 
-    public MemoryCacheNode(V _value){
+    public MemoryCacheNode(V _value) {
         set(_value);
     }
 
-    public MemoryCacheNode(V _value, Integer usage){
+    public MemoryCacheNode(V _value, Integer usage) {
         set(_value);
-        count=usage;
+        count = usage;
     }
 
     @Override
-    public V get(){
+    public V get() {
         count++;
         return value;
     }
 
     @Override
-    public V get(Boolean delete) throws IOException, ClassNotFoundException {
+    public V get(Boolean delete) {
         if (delete) {
             V tmpVal = value;
             removeValue();
@@ -42,15 +41,18 @@ public class MemoryCacheNode<V extends Serializable> implements CacheNodeInterfa
     }
 
     @Override
-    public void set(V _value){
-        count=1;
-        value=_value;
+    public void set(V _value) {
+        count = 1;
+        value = _value;
     }
 
     @Override
-    public void removeValue() throws IOException, ClassNotFoundException {
-        if (value==null) return;
-        value=null;
+    public void removeValue() {
+        // Бывает такое, что мы пытаемся удалить не существующее значение
+        if (value == null) return;
+        // Сбрасываем счечик обращений, потому что прежнего значения уже нет
+        count = 1;
+        value = null;
     }
 
     @Override

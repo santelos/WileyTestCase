@@ -8,21 +8,21 @@ import java.io.Serializable;
 
 public class ClassForCache implements Serializable {
 
-    ClassForCache(){
-        this(15,"asd",56D);
+    ClassForCache() {
+        this(15, "asd", 56D);
     }
 
-    public ClassForCache(Integer value, String strValue, Double doubleValue) {
+    ClassForCache(Integer value, String strValue, Double doubleValue) {
         this.value = value;
         this.strValue = strValue;
         this.doubleValue = doubleValue;
     }
 
-    Integer value;
+    private Integer value;
 
-    String strValue;
+    private String strValue;
 
-    Double doubleValue;
+    private Double doubleValue;
 
     public Integer getValue() {
         return value;

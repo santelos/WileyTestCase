@@ -14,6 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * LRU(Least Recently Used) стратегия кэширования.<br></br>
+ * Если переполнен оперативный кэш, то самый не используемый элемент переходит в файловый.<br></br>
+ * Если переполнен файловый кэш, то самый не используемый элемент удаляется насовсем.
+ */
 public class LRUCacheStrategy implements CacheStrategyInterface {
 
     @Override
@@ -28,21 +33,23 @@ public class LRUCacheStrategy implements CacheStrategyInterface {
         // Проходит по отсортированному листу и
         // если среди часто используемых объектов есть те, которые лежат в фаловом кэше, то переводит их в память
         // И наоборот, если среди объектов в памяти есть те, которые не часто используются, то переводит их в файлы
-        resList.removeIf(e -> {
+        resList.forEach(e -> {
             try {
+                // Если объект не находится в оперативке, но должен там находится
                 if (!e.getValue().inMemory() && resList.indexOf(e) < maxMem) {
-                    cacheTable.replace(e.getKey(), new MemoryCacheNode<>(e.getValue().get(true),e.getValue().count()));
+                    cacheTable.replace(e.getKey(), new MemoryCacheNode<>(e.getValue().get(true), e.getValue().count()));
                 }
-                if(e.getValue().inMemory() && resList.indexOf(e)>=maxMem && resList.indexOf(e)<maxMem+maxFile){
-                    cacheTable.replace(e.getKey(), new FileCacheNode<>(e.getValue().get(true),e.getValue().count()));
+                // Если объект находится в оперативке, но не должен там находится
+                if (e.getValue().inMemory() && resList.indexOf(e) >= maxMem && resList.indexOf(e) < maxMem + maxFile) {
+                    cacheTable.replace(e.getKey(), new FileCacheNode<>(e.getValue().get(true), e.getValue().count()));
                 }
-                if (resList.indexOf(e)>=maxMem+maxFile) {
+                // Если объект должен быть вытеснен из кэша насовсем
+                if (resList.indexOf(e) >= maxMem + maxFile) {
                     cacheTable.get(e.getKey()).removeValue();
                     cacheTable.remove(e.getKey());
                 }
-                return false;
             } catch (IOException | ClassNotFoundException ex) {
-                return true;
+                System.out.println("Object access error occurred while applying cache strategy. Key=\"" + e.getKey() + "\"");
             }
         });
     }

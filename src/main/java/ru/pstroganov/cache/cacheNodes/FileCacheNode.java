@@ -11,17 +11,33 @@ package ru.pstroganov.cache.cacheNodes;
 import java.io.*;
 import java.util.UUID;
 
+/**
+ * Класс реализации {@link CacheNodeInterface} как нод файлового кэша.
+ * @param <V> Класс {@code extends {@link Serializable}} который будет храниться в ноде.
+ */
 public class FileCacheNode<V extends Serializable> implements CacheNodeInterface<V> {
+    private File value;
+    private Integer count = 1;
 
-    File value;
-    Integer count = 1;
-
+    /**
+     * Конструктор для первичного создания Нода.<br></br>
+     * Сохраняет объект как файл. Количество обращений выставляет в 1.
+     * @param _value Объект для хранения.
+     * @throws IOException В случае ошибки записи в файл.
+     */
     public FileCacheNode(V _value) throws IOException {
         set(_value);
     }
 
+    /**
+     * Конструктор для создания Нода с установкой количества обращений.<br></br>
+     * Сохраняет объект как файл. Количество обращений выставляет в переданное значение.
+     * @param _value Объект для хранения.
+     * @param usage Количство обращений.
+     * @throws IOException В случае ошибки записи в файл.
+     */
     public FileCacheNode(V _value, Integer usage) throws IOException {
-        set(_value);
+        this(_value);
         count=usage;
     }
 
@@ -30,6 +46,7 @@ public class FileCacheNode<V extends Serializable> implements CacheNodeInterface
         FileInputStream file = new FileInputStream(value);
         ObjectInputStream inStream = new ObjectInputStream(file);
 
+        // Десериализуем полученный объект и кастим в дженерик
         V obj = (V) inStream.readObject();
 
         file.close();
@@ -45,6 +62,7 @@ public class FileCacheNode<V extends Serializable> implements CacheNodeInterface
         FileInputStream file = new FileInputStream(value);
         ObjectInputStream inStream = new ObjectInputStream(file);
 
+        // Десериализуем полученный объект и кастим в дженерик
         V obj = (V) inStream.readObject();
 
         file.close();
@@ -60,6 +78,7 @@ public class FileCacheNode<V extends Serializable> implements CacheNodeInterface
         count = 1;
 
         value = new File("tmp\\" + UUID.randomUUID() + ".tmp");
+        //Если директории tmp\ не существует, надо создать
         if(!new File("tmp\\").exists()) new File("tmp\\").mkdir();
         value.createNewFile();
 
@@ -74,7 +93,10 @@ public class FileCacheNode<V extends Serializable> implements CacheNodeInterface
 
     @Override
     public void removeValue() {
+        // Бывает такое, что мы пытаемся удалить не существующее значение
         if (value==null) return;
+        // Сбрасываем счечик обращений, потому что прежнего значения уже нет
+        count=1;
         value.delete();
         value = null;
     }
